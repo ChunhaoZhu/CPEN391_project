@@ -46,7 +46,11 @@ Database.prototype.getRooms = function(){
 Database.prototype.add = function(song){
     return this.connected.then(db =>
         new Promise((resolve, reject) => {
-            resolve(song);
+            db.collection('song').insertOne(song).then(result => {
+                resolve(song);
+            }, err => {
+                reject(err);
+            });
         })
     )
 }
