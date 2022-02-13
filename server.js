@@ -8,12 +8,12 @@ const db = new Database(DBurl, 'cpen391');
 
 
 app.get('/', (req, res) => {
-    res.send("hello");
     var song = {
         id: 1,
-        name: song1
+        name: 'song1'
     }
     db.add(song);
+    res.send("hello");
 });
 
 
