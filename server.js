@@ -6,6 +6,7 @@ const DBurl = 'mongodb+srv://391:' + process.env.DBpassword + '@cluster0.qh5yv.m
 const app = express();
 const db = new Database(DBurl, 'cpen391');
 
+app.use(express.json()) 
 
 app.get('/', (req, res) => {
     var song = {
@@ -14,6 +15,12 @@ app.get('/', (req, res) => {
     }
     db.add(song);
     res.send("hello");
+});
+
+app.post('/web', (req, res, next) => {
+    db.add(req.body).then((result) => {
+        res.send("hello post");
+    })
 });
 
 

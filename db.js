@@ -28,16 +28,14 @@ function Database(mongoUrl, dbName){
     );
 }
 
-Database.prototype.getRooms = function(){
+Database.prototype.get = function(){
     return this.connected.then(db =>
         new Promise((resolve, reject) => {
-            /* TODO: read the chatrooms from `db`
-             * and resolve an array of chatrooms */
-            db.collection('chatrooms').find().toArray((err, room) => {
+            db.collection('song').find().toArray((err, song) => {
                 if (err){
                     reject(err);
                 }
-                resolve(room);
+                resolve(song);
             })
         })
     )
