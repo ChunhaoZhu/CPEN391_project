@@ -1,0 +1,77 @@
+const express = require('express');
+const db = require('../db');
+const bodyParser = require('body-parser');
+const fs = require('fs');
+const { GridFsStorage } = require('multer-gridfs-storage');
+
+const router = express.Router().use(bodyParser.json());
+
+router.get('/', (req, res) => {
+    res.send("hello video");
+});
+
+router.post('/:filename', bodyParser.raw({
+    limit: '300mb', 
+    type: 'video/*'
+}), (req, res) => {
+    const v = req.params.filename;
+    const fd = fs.createWriteStream(`./videos/${v}`, {
+        flags: "w+",
+        encoding: "binary"
+    });
+    fd.end(req.body);
+    fd.on('close', () => {
+        db.initgfsbucket().then((bucket) => {
+            fs.createReadStream('./videos/' + v).
+            pipe(bucket.openUploadStream(v, {
+                chunkSizeBytes: 1048576,
+                metadata: { field: 'myField', value: 'myValue' }
+            }))
+            fs.unlink('./videos/' + v, (err) => {
+                if (err) {
+                  console.error(err)
+                }
+            })
+            res.send("upload sucessful");
+        });
+    });
+});
+
+router.get('/:filename', (req, res) => {
+    db.initgfs().then((result) => {
+        // console.log(result);
+        result.files.findOne({filename: req.params.filename }).then((file) => {
+            if (!file || file.length === 0) {
+              return res.status(404).json({
+                err: 'No file exists'
+              });
+            }
+            db.initgfsbucket().then((bucket) => {
+                bucket.openDownloadStream(file._id).pipe(res);
+            });
+          });
+    })
+
+});
+
+router.delete('/:filename', (req, res) => {
+    // db.delete(req.params["room"], req.params["name"].split("_")[0], req.params["name"].split("_")[1]).then((result) => {
+    //     res.send(result);
+    // })
+    db.initgfs().then((result) => {
+        // console.log(result);
+        result.files.findOne({filename: req.params.filename }).then((file) => {
+            if (!file || file.length === 0) {
+              return res.status(404).json({
+                err: 'No file exists'
+              });
+            }
+            db.initgfsbucket().then((bucket) => {
+                bucket.delete(file._id);
+                res.send("delete successful");
+            });
+          });
+    })
+})
+
+module.exports = router;

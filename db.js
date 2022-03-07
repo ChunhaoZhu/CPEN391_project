@@ -1,5 +1,10 @@
-const { MongoClient, ObjectID, ObjectId} = require('mongodb');	// require the mongodb driver
-
+const {MongoClient, GridFSBucket} = require('mongodb');	// require the mongodb driver
+const Grid = require('gridfs-stream');
+const MongoGridFS = require('mongo-gridfs');
+const path = require('path');
+const crypto = require('crypto');
+const multer = require('multer');
+const GridFsStorage = require('multer-gridfs-storage').GridFsStorage;
 
 function Database(mongoUrl, dbName){
     if (!(this instanceof Database)) return new Database(mongoUrl, dbName);
@@ -20,7 +25,7 @@ function Database(mongoUrl, dbName){
     });
     this.status = () => this.connected.then(
         db => ({ error: null, url: mongoUrl, db: dbName }),
-        err => ({ error: err })
+        err => ({ error: err }),
     );
 }
 
@@ -62,8 +67,28 @@ Database.prototype.delete = function(collection, firstname, lastname){
     ) 
 }
 
-
 const DBurl = 'mongodb+srv://391:' + process.env.DBpassword + '@cluster0.qh5yv.mongodb.net/myFirstDatabase?retryWrites=true&w=majority';
 const db = new Database(DBurl, 'cpen391');
+
+let gfs, gfsBucket;
+
+Database.prototype.initgfs = function(){
+    return this.connected.then(db =>
+        new Promise((resolve, reject) => {
+            gfs = Grid(db, MongoClient);
+            gfs.collection('fs');
+            resolve(gfs);
+        })
+    )
+}
+
+Database.prototype.initgfsbucket = function(){
+    return this.connected.then(db =>
+        new Promise((resolve, reject) => {
+            gfsBucket = new GridFSBucket(db);
+            resolve(gfsBucket);
+        })
+    )
+}
 
 module.exports = db;
