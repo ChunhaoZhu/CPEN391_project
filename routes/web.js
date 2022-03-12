@@ -8,7 +8,7 @@ router.get('/', (req, res) => {
 });
 
 router.get('/:room', (req, res) => {
-    db.db.get(req.params["room"]).then((result) => {
+    db.get(req.params["room"]).then((result) => {
         res.send(result);
     })
 });
@@ -16,14 +16,14 @@ router.get('/:room', (req, res) => {
 router.post('/:room', (req, res, next) => {
     console.log(req.body);
     console.log(req.files);
-    db.db.add(req.params["room"],req.body).then((result) => {
+    db.add(req.params["room"],req.body).then((result) => {
         console.log(req.body);
         res.send("hello post");
     })
 });
 
 router.delete('/:room/:name', (req, res) => {
-    db.db.delete(req.params["room"], req.params["name"].split("_")[0], req.params["name"].split("_")[1]).then((result) => {
+    db.delete(req.params["room"], req.params["name"].split("_")[0], req.params["name"].split("_")[1]).then((result) => {
         res.send(result);
     })
 })

@@ -68,6 +68,7 @@ Database.prototype.delete = function(collection, firstname, lastname){
 }
 
 const DBurl = 'mongodb+srv://391:' + process.env.DBpassword + '@cluster0.qh5yv.mongodb.net/myFirstDatabase?retryWrites=true&w=majority';
+
 const db = new Database(DBurl, 'cpen391');
 
 let gfs, gfsBucket;
