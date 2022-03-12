@@ -5,6 +5,7 @@ const path = require('path');
 const crypto = require('crypto');
 const multer = require('multer');
 const GridFsStorage = require('multer-gridfs-storage').GridFsStorage;
+var CONFIG = require('./config.json');
 
 function Database(mongoUrl, dbName){
     if (!(this instanceof Database)) return new Database(mongoUrl, dbName);
@@ -67,7 +68,9 @@ Database.prototype.delete = function(collection, firstname, lastname){
     ) 
 }
 
-const DBurl = 'mongodb+srv://391:' + process.env.DBpassword + '@cluster0.qh5yv.mongodb.net/myFirstDatabase?retryWrites=true&w=majority';
+
+const password = process.env.DBpassword || CONFIG.mysql.passwd.toString();
+const DBurl = 'mongodb+srv://391:' + password + '@cluster0.qh5yv.mongodb.net/myFirstDatabase?retryWrites=true&w=majority';
 
 const db = new Database(DBurl, 'cpen391');
 
