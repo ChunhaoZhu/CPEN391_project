@@ -70,6 +70,7 @@ Database.prototype.delete = function(collection, firstname, lastname){
 
 
 const password = process.env.DBpassword || CONFIG.mysql.passwd.toString();
+console.log(password);
 const DBurl = 'mongodb+srv://391:' + password + '@cluster0.qh5yv.mongodb.net/myFirstDatabase?retryWrites=true&w=majority';
 
 const db = new Database(DBurl, 'cpen391');
