@@ -10,7 +10,7 @@ router.get('/', (req, res) => {
     res.send("hello de1");
 });
 
-router.post('/:filename', bodyParser.raw({
+router.put('/:filename', bodyParser.raw({
     limit: '300mb', 
     type: 'video/*'
 }), (req, res) => {
