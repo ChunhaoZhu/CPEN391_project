@@ -21,7 +21,7 @@ router.post('/:filename', bodyParser.raw({
     });
     fd.end(req.body);
     fd.on('close', () => {
-        db.initgfsbucket().then((bucket) => {
+        db.initgfsbucket('web').then((bucket) => {
             fs.createReadStream('./videos/' + v).
             pipe(bucket.openUploadStream(v, {
                 chunkSizeBytes: 1048576,
@@ -38,15 +38,14 @@ router.post('/:filename', bodyParser.raw({
 });
 
 router.get('/:filename', (req, res) => {
-    db.initgfs().then((result) => {
-        // console.log(result);
+    db.initgfs('web').then((result) => {
         result.files.findOne({filename: req.params.filename }).then((file) => {
             if (!file || file.length === 0) {
               return res.status(404).json({
                 err: 'No file exists'
               });
             }
-            db.initgfsbucket().then((bucket) => {
+            db.initgfsbucket('web').then((bucket) => {
                 bucket.openDownloadStream(file._id).pipe(res);
             });
           });
@@ -55,18 +54,14 @@ router.get('/:filename', (req, res) => {
 });
 
 router.delete('/:filename', (req, res) => {
-    // db.delete(req.params["room"], req.params["name"].split("_")[0], req.params["name"].split("_")[1]).then((result) => {
-    //     res.send(result);
-    // })
-    db.initgfs().then((result) => {
-        // console.log(result);
+    db.initgfs('web').then((result) => {
         result.files.findOne({filename: req.params.filename }).then((file) => {
             if (!file || file.length === 0) {
               return res.status(404).json({
                 err: 'No file exists'
               });
             }
-            db.initgfsbucket().then((bucket) => {
+            db.initgfsbucket('web').then((bucket) => {
                 bucket.delete(file._id);
                 res.send("delete successful");
             });

@@ -75,20 +75,20 @@ const db = new Database(DBurl, 'cpen391');
 
 let gfs, gfsBucket;
 
-Database.prototype.initgfs = function(){
+Database.prototype.initgfs = function(collection_name){
     return this.connected.then(db =>
         new Promise((resolve, reject) => {
             gfs = Grid(db, MongoClient);
-            gfs.collection('fs');
+            gfs.collection(collection_name);
             resolve(gfs);
         })
     )
 }
 
-Database.prototype.initgfsbucket = function(){
+Database.prototype.initgfsbucket = function(collection_name){
     return this.connected.then(db =>
         new Promise((resolve, reject) => {
-            gfsBucket = new GridFSBucket(db);
+            gfsBucket = new GridFSBucket(db, { bucketName: collection_name});
             resolve(gfsBucket);
         })
     )
