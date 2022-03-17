@@ -3,6 +3,8 @@ const db = require('../db');
 const bodyParser = require('body-parser');
 const fs = require('fs');
 const { GridFsStorage } = require('multer-gridfs-storage');
+var XMLHttpRequest = require('xhr2');
+const { resolve } = require('path');
 
 const router = express.Router().use(bodyParser.json());
 
@@ -26,13 +28,19 @@ router.post('/:filename', bodyParser.raw({
             pipe(bucket.openUploadStream(v, {
                 chunkSizeBytes: 1048576,
                 metadata: { field: 'myField', value: 'myValue' }
-            }))
-            fs.unlink('./videos/' + v, (err) => {
-                if (err) {
-                  console.error(err)
-                }
-            })
-            res.send("upload sucessful");
+            })).
+            on('finish', () => {
+                fs.unlink('./videos/' + v, (err) => {
+                    if (err) {
+                      console.error(err)
+                    }
+                })
+                var xhr = new XMLHttpRequest();
+                xhr.open("GET", "http://localhost:8080");
+                xhr.setRequestHeader("filename", req.params.filename);
+                xhr.send();
+                res.send("upload sucessful");
+            });
         });
     });
 });
