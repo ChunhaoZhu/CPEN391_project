@@ -1,10 +1,8 @@
 # used to fetch authorized visitors' video for model training
 
 import requests
-import base64
-import json
 
-filename = 'room1_Max_Cao.mp4';
+filename = 'room1_Max_Cao.mp4'
 url = 'http://391server-env.eba-6eyremyt.ca-central-1.elasticbeanstalk.com/video/' + filename
 
 x = requests.get(url, allow_redirects=True)
