@@ -68,6 +68,18 @@ Database.prototype.delete = function(collection, firstname, lastname){
     ) 
 }
 
+Database.prototype.deleteAll = function(collection){
+    return this.connected.then(db =>
+        new Promise((resolve, reject) => {
+            db.collection(collection).deleteMany({}).then(result => {
+                resolve("delete all successful");
+            }, err => {
+                reject(err);
+            })
+        })
+    ) 
+}
+
 
 const DBurl = 'mongodb+srv://391:' + password + '@cluster0.qh5yv.mongodb.net/myFirstDatabase?retryWrites=true&w=majority';
 

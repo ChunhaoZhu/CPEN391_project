@@ -12,6 +12,27 @@ router.get('/', (req, res) => {
     res.send("hello video");
 });
 
+router.get('/:room', (req, res) => {
+    collection_name = req.params["room"] + "_eval"
+    db.get(collection_name).then((result) => {
+        res.send(result);
+    })
+});
+
+router.post('/:room', (req, res) => {
+    collection_name = req.params["room"] + "_eval"
+    db.add(collection_name,req.body).then((result) => {
+        res.send("hello post from eval");
+    })
+});
+
+router.delete('/:room', (req, res) => {
+    collection_name = req.params["room"] + "_eval"
+    db.deleteAll(collection_name).then((result) => {
+        res.send("delete all successful");
+    })
+})
+
 router.post('/:filename', bodyParser.raw({
     limit: '300mb', 
     type: 'video/*'
