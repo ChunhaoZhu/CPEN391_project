@@ -4,10 +4,17 @@ const bodyParser = require('body-parser');
 const fs = require('fs');
 const { GridFsStorage } = require('multer-gridfs-storage');
 
-const router = express.Router().use(bodyParser.json());
+const router = express.Router().use(bodyParser.json({ limit: '50mb' }));
+
+let img;
 
 router.get('/', (req, res) => {
-    res.send("hello de1");
+    res.send(img);
+});
+
+router.post('/', (req, res) => {
+    img = req.body;
+    res.send("de1 post successful");
 });
 
 router.put('/:filename', bodyParser.raw({
@@ -36,6 +43,7 @@ router.put('/:filename', bodyParser.raw({
         });
     });
 });
+
 
 router.get('/:filename', (req, res) => {
     db.initgfs('de1').then((result) => {
