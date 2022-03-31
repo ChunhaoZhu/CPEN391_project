@@ -4,6 +4,7 @@ const webRoute = require('./routes/web.js');
 const de1Route = require('./routes/de1.js');
 const videoRoute = require('./routes/video.js');
 const sensorRoute = require('./routes/sensor.js');
+const MLRoute = require('./routes/ml.js');
 const path = require('path');
 const fs = require('fs');
 
@@ -14,6 +15,7 @@ app.use('/web', webRoute);
 app.use('/de1', de1Route);
 app.use('/video', videoRoute);
 app.use('/sensor', sensorRoute);
+app.use('/ml', MLRoute);
 
 app.listen(port, () => {
     console.log(`Server starts.`);
