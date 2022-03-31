@@ -19,10 +19,10 @@ router.get('/', (req, res) => {//sent from ml server
 });
 
 router.post('/', (req, res) => { //sent from sensor
-    room_num = req.headers['room_num'];
+    room_num = req.body['room_num'];
     run = 1;
     // res.send("sensor post successful");
-    res.send(req.headers);
+    res.send(room_num);
 });
 
 router.post('/disable', (req, res) => { //sent from ml server
